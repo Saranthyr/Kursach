@@ -1,16 +1,18 @@
-from PyQt5 import QtWidgets, QtSql, QtCore
+from PyQt5 import QtWidgets, QtSql
 from PyQt5.QtCore import *
-from window_layout import Ui_MainWindow
+from win_lay import Ui_MainWindow
 import sys
-
+import config
+import urllib
+from xml.dom.minidom import parse, parseString
 
 def conn(self):
     db = QtSql.QSqlDatabase.addDatabase('QPSQL')
-    db.setHostName('localhost')
-    db.setPort(5432)
-    db.setDatabaseName("mmo_db")
-    db.setUserName('postgres')
-    db.setPassword('1234')
+    db.setHostName(config.DB_HOST)
+    db.setPort(config.DB_PORT)
+    db.setDatabaseName(config.DB_DATABASE_NAME)
+    db.setUserName(config.DB_USERNAME)
+    db.setPassword(config.DB_PASSWORD)
 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -34,7 +36,9 @@ class mywindow(QtWidgets.QMainWindow):
             temp.select()
         def add_row():
             temp.insertRow(temp.rowCount())
+        def save_new_row():
             temp.submitAll()
+            temp.select()
         tab = 'regions'
         temp.setTable(tab)
         temp.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
@@ -42,8 +46,21 @@ class mywindow(QtWidgets.QMainWindow):
         temp.select()
         self.ui.tableView.setModel(temp)
         self.ui.pushButton.clicked.connect(add_row)
+        self.ui.pushButton_3.clicked.connect(self.export_database_to_xml)
         self.ui.pushButton_2.clicked.connect(remove_row)
+        self.ui.pushButton_4.clicked.connect(save_new_row)
 
+    def export_database_to_xml(self):
+        query = "select database_to_xml(true, false, '')"
+        xmlpath = config.DB_DATABASE_NAME + ".xml"
+        q = QtSql.QSqlQuery()
+        q.exec(query)
+        with open(xmlpath, "w") as f:
+            while (q.next()):
+                xml = str(q.value(0))
+                f.write(xml)
+    # def import_xml(self):
+    #     query =
 
     def pass_combobox_text(self):
         return str(self.ui.comboBox.currentText())
@@ -56,6 +73,9 @@ class mywindow(QtWidgets.QMainWindow):
         def add_row():
             model.insertRow(model.rowCount())
             model.submitAll()
+        def save_new_row():
+            model.submitAll()
+            model.select()
         if (self.pass_combobox_text() == "Regions"):
             model = QtSql.QSqlTableModel()
             tab = 'regions'
@@ -66,6 +86,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
             self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
         if (self.pass_combobox_text() == "Languages"):
             model = QtSql.QSqlTableModel()
             tab = 'languages'
@@ -76,6 +97,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
             self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
         if (str(self.ui.comboBox.currentText()) == "Servers"):
             model = QtSql.QSqlTableModel()
             tab = 'servers'
@@ -87,6 +109,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
             self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
         if (str(self.ui.comboBox.currentText()) == "Characters"):
             model = QtSql.QSqlTableModel()
             tab = 'chars'
@@ -102,6 +125,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
             self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
         if (str(self.ui.comboBox.currentText()) == "Game worlds"):
             model = QtSql.QSqlTableModel()
             tab = 'game_worlds'
@@ -113,6 +137,8 @@ class mywindow(QtWidgets.QMainWindow):
             model.select()
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
+            self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
         if (str(self.ui.comboBox.currentText()) == "Users"):
             model = QtSql.QSqlTableModel()
             tab = 'users'
@@ -123,6 +149,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.tableView.setModel(model)
             self.ui.pushButton.clicked.connect(add_row)
             self.ui.pushButton_2.clicked.connect(remove_row)
+            self.ui.pushButton_4.clicked.connect(save_new_row)
 
 
 app = QtWidgets.QApplication([])
@@ -130,54 +157,3 @@ application = mywindow()
 application.show()
 
 sys.exit(app.exec())
-
-# def initializeModel(model):
-#    model.setTable('sportsmen')
-#    model.setEditStrategy(QSqlTableModel.OnFieldChange)
-#    model.select()
-#
-# def createView(title, model):
-#    view = QTableView()
-#    view.setModel(model)
-#    view.setWindowTitle(title)
-#    return view
-#
-# def addrow():
-#    print (model.rowCount())
-#    ret = model.insertRows(model.rowCount(), 1)
-#    print (ret)
-#
-# def findrow(i):
-#    delrow = i.row()
-#
-# if __name__ == '__main__':
-#    app = QApplication(sys.argv)
-#    db = QSqlDatabase.addDatabase('QPSQL')
-#    db.setHostName('localhost')
-#    db.setPort(5432)
-#    db.setDatabaseName("kursach")
-#    db.setUserName('postgres')
-#    db.setPassword('1234')
-#    model = QSqlTableModel()
-#    delrow = -1
-#    initializeModel(model)
-#
-#    view1 = createView("Table Model (View 1)", model)
-#    view1.clicked.connect(findrow)
-#
-#    dlg = QDialog()
-#    layout = QVBoxLayout()
-#    layout.addWidget(view1)
-#
-#    button = QPushButton("Add a row")
-#    button.clicked.connect(addrow)
-#    layout.addWidget(button)
-#
-#    btn1 = QPushButton("del a row")
-#    btn1.clicked.connect(lambda: model.removeRow(view1.currentIndex().row()))
-#    layout.addWidget(btn1)
-#
-#    dlg.setLayout(layout)
-#    dlg.setWindowTitle("Database Demo")
-#    dlg.show()
-#    sys.exit(app.exec_())

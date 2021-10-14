@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'window_main.ui'
+# Form implementation generated from reading ui file 'win_lay.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -23,14 +23,20 @@ class Ui_MainWindow(object):
         self.tableView.setGeometry(QtCore.QRect(0, 40, 871, 571))
         self.tableView.setObjectName("tableView")
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(10, 10, 111, 21))
+        self.comboBox.setGeometry(QtCore.QRect(10, 10, 111, 23))
         self.comboBox.setObjectName("comboBox")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(140, 10, 75, 23))
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(240, 10, 75, 23))
+        self.pushButton_2.setGeometry(QtCore.QRect(340, 10, 75, 23))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setGeometry(QtCore.QRect(440, 10, 125, 23))
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(240, 10, 80, 23))
+        self.pushButton_4.setObjectName("pushButton_4")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -41,3 +47,5 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "Add row"))
         self.pushButton_2.setText(_translate("MainWindow", "Delete row"))
+        self.pushButton_3.setText(_translate("MainWindow", "Export database to .xml"))
+        self.pushButton_4.setText(_translate("MainWindow", "Save new row"))
