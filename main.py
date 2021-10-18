@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets, QtSql
 from PyQt5.QtCore import *
 from win_lay import Ui_MainWindow
+from lxml import etree
 import sys
 import config
-import urllib
-from xml.dom.minidom import parse, parseString
+import os
 
 def conn(self):
     db = QtSql.QSqlDatabase.addDatabase('QPSQL')
@@ -46,21 +46,36 @@ class mywindow(QtWidgets.QMainWindow):
         temp.select()
         self.ui.tableView.setModel(temp)
         self.ui.pushButton.clicked.connect(add_row)
-        self.ui.pushButton_3.clicked.connect(self.export_database_to_xml)
+        self.ui.pushButton_3.clicked.connect(self.export_table_to_xml)
         self.ui.pushButton_2.clicked.connect(remove_row)
         self.ui.pushButton_4.clicked.connect(save_new_row)
+        self.ui.pushButton_5.clicked.connect(self.import_xml)
 
-    def export_database_to_xml(self):
-        query = "select database_to_xml(true, false, '')"
-        xmlpath = config.DB_DATABASE_NAME + ".xml"
+    def export_table_to_xml(self):
+        current_table = self.pass_combobox_text()
+        query = "select table_to_xml('"  + current_table + "', true, false, '')"
+        xmlpath = current_table + ".xml"
         q = QtSql.QSqlQuery()
         q.exec(query)
         with open(xmlpath, "w") as f:
             while (q.next()):
                 xml = str(q.value(0))
+                xml = xml.replace(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"','')
                 f.write(xml)
-    # def import_xml(self):
-    #     query =
+
+    def import_xml(self):
+        selectfile, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select table for import', '', '.XML files(*.xml)')
+        fname = selectfile.rstrip(os.sep)
+        r = etree.parse(fname)
+        t = r.getroot()
+        tablename = t.tag
+        query = QtSql.QSqlQuery()
+        q = "select column_name from information_schema.columns where table_schema = 'public' and table_name = '" + tablename + "'"
+        query.exec(q)
+        while query.next():
+            print(query.value(0))
+
+
 
     def pass_combobox_text(self):
         return str(self.ui.comboBox.currentText())
@@ -72,7 +87,6 @@ class mywindow(QtWidgets.QMainWindow):
             model.select()
         def add_row():
             model.insertRow(model.rowCount())
-            model.submitAll()
         def save_new_row():
             model.submitAll()
             model.select()
