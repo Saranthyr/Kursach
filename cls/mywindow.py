@@ -42,6 +42,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.model.select()
 
     def add_row(self):
+        self.model.submitAll()
         self.model.insertRow(self.model.rowCount())
 
     def save_new_row(self):

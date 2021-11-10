@@ -53,9 +53,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Kursovoy Proekt Maksimets"))
         self.pushButton.setText(_translate("MainWindow", "Add row"))
-        self.pushButton_4.setText(_translate("MainWindow", "Save new row"))
+        self.pushButton_4.setText(_translate("MainWindow", "Save changes"))
         self.pushButton_2.setText(_translate("MainWindow", "Delete row"))
         self.pushButton_3.setText(_translate("MainWindow", "Export table to .xml"))
         self.pushButton_5.setText(_translate("MainWindow", "Import table from .xml"))
